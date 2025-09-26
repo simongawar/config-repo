@@ -1,55 +1,68 @@
-## Spring Microservices in Action - Second Edition. Chapter 5
+# Spring Microservices in Action - Second Edition: Chapter 5
 
-# Introduction
-Welcome to Spring Microservices in Action, Chapter 5.  Chapter 5 introduces the Spring Cloud Config service and how you can use it managed the configuration of your microservices.  By the time you are done reading this chapter you will have built and/or deployed:
+Overview
+This chapter introduces the fundamental concept of centralized configuration using the Spring Cloud Config Server. It demonstrates how to externalize and manage the settings for your microservices, enabling dynamic updates and simplified operations.
 
-1.  A Spring Cloud Config server that is deployed as Docker container and can manage a services configuration information using a file system/ classpath or GitHub-based repository.
-2.  A licensing service that will manage licensing data used within Ostock.
-3.  A Postgres SQL database used to hold the data.
+By the time you are done, you will have built and deployed a complete microservice ecosystem consisting of:
 
-## Initial Configuration
-1.	Apache Maven (http://maven.apache.org)  All of the code examples in this book have been compiled with Java version 11.
-2.	Git Client (http://git-scm.com)
-3.  Docker(https://www.docker.com/products/docker-desktop)
+Config Service: A Spring Cloud Config server deployed as a Docker container, managing configuration from a file system/classpath or a GitHub-based repository.
 
-## How To Use
+Licensing Service: A primary microservice responsible for managing licensing data, which fetches its configuration from the Config Service.
 
-To clone and run this application, you'll need [Git](https://git-scm.com), [Maven](https://maven.apache.org/), [Java 11](https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html). From your command line:
+PostgreSQL Database: The backing data store used by the Licensing Service.
 
-```bash
-# Clone this repository
-$ git clone https://github.com/ihuaylupo/manning-smia
+Prerequisites
+To build and run the services in this chapter, ensure you have the following installed:
 
-# Go into the repository, by chaning to the directory where you have downloaded the 
-# chapter 5 source code
-$ cd chapter5
+Apache Maven: (<http://maven.apache.org>)
 
-# To build the code examples for Chapter 5 as a docker image, open a command-line 
-# window and execute the following command:
+Java Development Kit (JDK): Version 11 or newer (All code examples were compiled with Java 11).
+
+Git Client: (<http://git-scm.com>)
+
+Docker Desktop: (<https://www.docker.com/products/docker-desktop>) - Required for running the services and the database via docker-compose.
+
+Running Chapter 5 Services (Build & Deploy)
+The services are packaged as Docker images and orchestrated using docker-compose. Follow these three steps from your command line to get the entire stack running.
+
+Step 1: Clone the Repository and Navigate
+
+# Clone the source code repository
+
+$ git clone [https://github.com/ihuaylupo/manning-smia](https://github.com/ihuaylupo/manning-smia)
+
+# Navigate into the directory containing the Chapter 5 source code
+
+$ cd manning-smia/chapter5
+
+Step 2: Build the Docker Images
+This command will compile all Spring Boot projects in the directory and use the configured Spotify Dockerfile Maven Plugin (defined in pom.xml) to build the Docker images for both the config-service and licensing-service.
+
+# Build all Spring Boot applications and their Docker images
+
 $ mvn clean package dockerfile:build
 
-# Now we are going to use docker-compose to start the actual image.  To start the docker image, stay in the directory containing  your chapter 5 source code and  Run the following command: 
+Step 3: Start the Microservice Stack
+Use docker-compose to launch the PostgreSQL database, the Config Server, and the Licensing Service using the images built in the previous step.
+
+# Start all services defined in the docker-compose file
+
 $ docker-compose -f docker/docker-compose.yml up
-```
 
-# The build command
+If everything starts correctly, you will see output from all services (PostgreSQL, Config Service, and Licensing Service) indicating that they are running and communicating.
 
-Will execute the [Spotify dockerfile plugin](https://github.com/spotify/dockerfile-maven) defined in the pom.xml file.  
+Command Breakdown
+The Build Command (mvn clean package dockerfile:build)
+This single command executes the build for all nested Spring projects in the chapter's directory. If successful, you should see a message confirming the build finished successfully for all services.
 
-This is the first chapter we will have multiple Spring projects that need to be be built and compiled.  Running the above command at the root of the project directory will build all of the projects.  If everything builds successfully you should see a message indicating that the build was successful.
+The Run Command (docker-compose -f docker/docker-compose.yml up)
+This command reads the service definitions in the docker/docker-compose.yml file and launches the entire application environment. This includes starting the PostgreSQL container, followed by the Config Server, and finally the Licensing Service, which relies on the Config Server for its startup configuration.
 
-# The Run command
+Database
+The necessary PostgreSQL database script is included in the docker directory for database initialization.
 
-This command will run our services using the docker-compose.yml file located in the /docker directory. 
+Contact
+I'd like you to send me an email on <g.dakthak@gmail.com> about anything you'd want to say about this software.
 
-If everything starts correctly you should see a bunch of Spring Boot information fly by on standard out.  At this point all of the services needed for the chapter code examples will be running.
-
-# Database
-You can find the database script as well in the docker directory.
-
-## Contact
-
-I'd like you to send me an email on <illaryhs@gmail.com> about anything you'd want to say about this software.
-
-### Contributing
+Contributing
 Feel free to file an issue if it doesn't work for your code sample. Thanks.
