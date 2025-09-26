@@ -1,0 +1,7 @@
+# licensing-service-test.yml
+spring:
+  datasource:
+    # Set the new password to 'pass' as required for the 'test' profile
+    password: '{cipher}AQD0rA4/Qz5/t8/...' # Placeholder, use actual ciphered value if vault is enabled
+    # OR, if not using a cipher for tests:
+    # password: pass

@@ -1,0 +1,70 @@
+version: '3.8'
+services:
+  database:
+    # Changed from postgres:latest to a standard MySQL image
+    image: mysql:8.0
+    ports:
+      - "3306:3306" # Standard MySQL port
+    environment:
+      # MySQL environment variables (user/pass)
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_USER: "user"
+      MYSQL_PASSWORD: "password"
+      MYSQL_DATABASE: "ostock_dev" # Using the existing database name
+    volumes:
+        # Assuming you'll adjust your init.sql/data.sql files for MySQL syntax
+        - ./init.sql:/docker-entrypoint-initdb.d/1-init.sql
+        - ./data.sql:/docker-entrypoint-initdb.d/2-data.sql
+    networks:
+      backend:
+        aliases:
+          - "database"
+    healthcheck:
+      # Updated healthcheck for MySQL
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      
+  configserver:
+    image: ostock/configserver:0.0.1-SNAPSHOT
+    # STEP 2: Change port mapping and use environment variable for the internal port
+    ports:
+        - "8089:8089" # Map host port 8089 to container port 8089
+    environment:
+      # FIX: Use key: value format and quote non-simple values (like ports)
+      SERVER_PORT: "8089" # STEP 2
+      ENCRYPT_KEY: "fje83Ki8403Iod87dne7Yjsl3THueh48jfuO9j4U2hf64Lo"
+      # FIX: This value contains a URL (path separators) and must be a string.
+      spring.cloud.config.server.git.uri: "file:///usr/local/configserver/config-repo" # STEP 4
+    volumes:
+      # STEP 4: Mount the local config-repo into the container
+      - ./config-repo:/usr/local/configserver/config-repo
+    networks:
+      backend:
+        aliases:
+          - "configserver"
+
+  licensingservice:
+    image: ostock/licensing-service:0.0.2-SNAPSHOT
+    environment:
+      # FIX: Use key: value format and ensure proper string representation
+      SPRING_PROFILES_ACTIVE: "test" # STEP 3
+      CONFIGSERVER_URI: "http://configserver:8089"
+      CONFIGSERVER_PORT: "8089" # STEP 2
+      DATABASESERVER_PORT: "3306" # MySQL uses port 3306
+      ENCRYPT_KEY: "IMSYMMETRIC" # Ignore the cSpell warning here
+      MYSQL_PASSWORD: "pass" # STEP 3 - Override the database password for 'test' profile
+    depends_on:
+      database:
+        condition: service_healthy
+      configserver:
+        condition: service_started
+    ports:
+      - "8089:8089"
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
