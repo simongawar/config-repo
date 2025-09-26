@@ -27,25 +27,25 @@ The services are packaged as Docker images and orchestrated using docker-compose
 
 Step 1: Clone the Repository and Navigate
 
-# Clone the source code repository
+Clone the source code repository
 
 $ git clone [https://github.com/ihuaylupo/manning-smia](https://github.com/ihuaylupo/manning-smia)
 
-# Navigate into the directory containing the Chapter 5 source code
+Navigate into the directory containing the Chapter 5 source code
 
 $ cd manning-smia/chapter5
 
 Step 2: Build the Docker Images
 This command will compile all Spring Boot projects in the directory and use the configured Spotify Dockerfile Maven Plugin (defined in pom.xml) to build the Docker images for both the config-service and licensing-service.
 
-# Build all Spring Boot applications and their Docker images
+Build all Spring Boot applications and their Docker images
 
 $ mvn clean package dockerfile:build
 
 Step 3: Start the Microservice Stack
 Use docker-compose to launch the PostgreSQL database, the Config Server, and the Licensing Service using the images built in the previous step.
 
-# Start all services defined in the docker-compose file
+Start all services defined in the docker-compose file
 
 $ docker-compose -f docker/docker-compose.yml up
 
