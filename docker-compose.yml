@@ -9,8 +9,8 @@ services:
       # MySQL environment variables (user/pass)
       MYSQL_ROOT_PASSWORD: "root"
       MYSQL_USER: "user"
-      MYSQL_PASSWORD: "password"
-      MYSQL_DATABASE: "ostock_dev" # Using the existing database name
+      MYSQL_PASSWORD: "root@2025db"
+      MYSQL_DATABASE: "ostock_db" # Using the existing database name
     volumes:
         # Assuming you'll adjust your init.sql/data.sql files for MySQL syntax
         - ./init.sql:/docker-entrypoint-initdb.d/1-init.sql
