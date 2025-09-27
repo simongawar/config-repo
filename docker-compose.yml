@@ -1,3 +1,4 @@
+version: '3.8'
 services:
   database:
     # Changed from postgres:latest to a standard MySQL image
@@ -26,10 +27,7 @@ services:
       retries: 5
       
   configserver:
-    # --- FIX APPLIED HERE ---
-    # REPLACED 'image:' with 'build:' to build the image locally and fix "pull access denied"
-    build: ../configserver 
-    # image: ostock/configserver:0.0.1-SNAPSHOT # <-- Original line commented/removed
+    image: ostock/configserver:0.0.1-SNAPSHOT
     # STEP 2: Change port mapping and use environment variable for the internal port
     ports:
         - "8089:8089" # Map host port 8089 to container port 8089
@@ -48,10 +46,7 @@ services:
           - "configserver"
 
   licensingservice:
-    # --- FIX APPLIED HERE ---
-    # REPLACED 'image:' with 'build:' to build the image locally and fix "pull access denied"
-    build: ../licensingservice
-    # image: ostock/licensing-service:0.0.1-SNAPSHOT # <-- Original line commented/removed
+    image: ostock/licensing-service:0.0.1-SNAPSHOT
     environment:
       # FIX: Use key: value format and ensure proper string representation
       SPRING_PROFILES_ACTIVE: "test" # STEP 3
