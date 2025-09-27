@@ -64,11 +64,10 @@
           <artifactId>spring-boot-starter-data-jpa</artifactId> 
         </dependency>
         
-        <!-- MySQL Connector updated to use the version property -->
+        <!-- MySQL Connector: Removed explicit version to rely on Spring Boot parent's management -->
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
-            <version>${mysql.version}</version> 
         </dependency>
         <!-- Removed: org.postgresql -->
 
