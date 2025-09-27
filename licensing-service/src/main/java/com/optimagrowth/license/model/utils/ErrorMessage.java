@@ -2,7 +2,7 @@ package com.optimagrowth.license.model.utils;
 
 /**
  * Error message class
- * @author ihuaylupo
+ * @author Simon 
  * @version 1.0
  * @since Jun 25, 2018
  */
