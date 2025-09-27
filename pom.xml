@@ -21,7 +21,7 @@
 
     <properties>
         <java.version>24</java.version> 
-        <lombok.version>1.18.32</lombok.version>
+        <lombok.version>1.18.34</lombok.version>
         <docker.image.prefix>ostock</docker.image.prefix>
         <dockerfile-maven-plugin.version>1.4.13</dockerfile-maven-plugin.version>
     </properties>
