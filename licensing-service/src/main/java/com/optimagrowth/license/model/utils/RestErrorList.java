@@ -9,7 +9,7 @@ import static java.util.Arrays.asList;
 
 /**
  * Error list
- * @author ihuaylupo
+ * @author Simon
  * @version
  * @since Jun 25, 2018
  */
