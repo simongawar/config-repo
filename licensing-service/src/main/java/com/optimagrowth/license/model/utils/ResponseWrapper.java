@@ -9,9 +9,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * Response Wrapper
- * @author ihuaylupo
+ * @author simon
  * @version
- * @since Jun 25, 2018
+ * @since September 25, 2025
  */
 @JsonInclude(NON_NULL)
 
