@@ -21,9 +21,9 @@ import com.optimagrowth.license.model.utils.RestErrorList;
 
 /**
  *
- * @author ihuaylupo
+ * @author simon
  * @version
- * @since Jun 28, 2018
+ * @since 9 28, 2025
  */
 
 
