@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serializable; // <--- ADDED: Needed for JPA entities
 
 /**
  * Represents the License Entity used for persistence with a MySQL database
@@ -21,12 +22,17 @@ import lombok.ToString;
 @Getter @Setter @ToString
 @Entity
 @Table(name="licenses")
-public class License extends RepresentationModel<License> {
+public class License extends RepresentationModel<License> implements Serializable { // <--- ADDED: Implements Serializable
+
+    // Recommended for Serializable classes
+    private static final long serialVersionUID = 1L;
 
     @Id
     @Column(name = "license_id", nullable = false)
     private String licenseId;
 
+    // ADDED: Explicit @Column annotation for the description field
+    @Column(name = "description")
     private String description;
 
     @Column(name = "organization_id", nullable = false)
