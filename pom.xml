@@ -20,7 +20,7 @@
     <description>Service for managing licenses</description>
 
     <properties>
-        <java.version>21</java.version>
+        <java.version>24</java.version>
         <!-- Note: We rely on the spring-boot-starter-parent to manage the version of the MySQL connector, 
              but we define it here as a fallback or for clarity if needed. -->
         <mysql.version>8.0.33</mysql.version>
