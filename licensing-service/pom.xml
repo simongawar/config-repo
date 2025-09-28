@@ -20,7 +20,7 @@
         <!-- Corrected XML structure and added mysql.version property -->
         <docker.image.prefix>ostock</docker.image.prefix>
         <spring-cloud.version>2025.0.0</spring-cloud.version>
-        <mysql.version>8.0.0</mysql.version>
+        <mysql.version>8.0.33</mysql.version>
     </properties>
 
     <dependencies>
@@ -57,7 +57,7 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-config</artifactId>
-            <version>${spring-cloud.version}</version>
+            <!-- NOTE: Using the spring-cloud-dependencies BOM to manage the version -->
         </dependency>
         <dependency>
           <groupId>org.springframework.boot</groupId>
@@ -69,11 +69,16 @@
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
         </dependency>
-        <!-- Removed: org.postgresql -->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
     </dependencies>
