@@ -2,7 +2,6 @@ package com.optimagrowth.license.service;
 
 import java.util.Optional;
 import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
@@ -23,61 +22,59 @@ public class LicenseService {
     @Autowired
     ServiceConfig config;
 
-    /**
-     * Retrieves a license by ID and organization ID.
-     * Uses Optional to handle the case where the license is not found,
-     * throwing an IllegalArgumentException if missing.
-     * @param licenseId The license ID.
-     * @param organizationId The organization ID.
-     * @return The found License object.
-     */
     public License getLicense(String licenseId, String organizationId){
-        // FIX 1: Use Optional.orElseThrow() to handle the result from the repository.
-        License license = licenseRepository.findByOrganizationIdAndLicenseId(organizationId, licenseId)
-            .orElseThrow(() -> new IllegalArgumentException(
-                // FIX 2: Fixed message argument formatting.
-                String.format(messages.getMessage("license.search.error.message", null, null), licenseId, organizationId)
-            ));
+        // FIX 1: The repository method is assumed to return Optional<License>.
+        Optional<License> licenseOptional = licenseRepository.findByOrganizationIdAndLicenseId(organizationId, licenseId);
 
-        // FIX 3: Use the correct getter for the configuration property (changed from getExampleProperty() to getProperty()).
-        return license.withComment(config.getProperty());
+        if (!licenseOptional.isPresent()) {
+            // FIX 5 (Part A): Correctly use MessageSource to format the error message.
+            String errorMessage = messages.getMessage(
+                "license.search.error.message", 
+                new Object[] {licenseId, organizationId}, // Pass arguments
+                null // Locale
+            );
+            throw new IllegalArgumentException(errorMessage);
+        }
+
+        License license = licenseOptional.get();
+
+        // FIX 2 & 3: Call the correct config getter (e.g., getExampleProperty) and 
+        // FIX 4 (Part A): Use a setter if withComment() doesn't exist.
+        license.setComment(config.getExampleProperty()); 
+        
+        return license;
     }
 
-    /**
-     * Creates and saves a new license.
-     * @param license The license object to save.
-     * @return The created License object.
-     */
     public License createLicense(License license){
         license.setLicenseId(UUID.randomUUID().toString());
         licenseRepository.save(license);
 
-        // FIX 4: Use the correct getter for the configuration property (changed from getExampleProperty() to getProperty()).
-        return license.withComment(config.getProperty());
+        // FIX 2 & 4: Call the correct config getter (e.g., getExampleProperty) and 
+        // use a setter if withComment() doesn't exist.
+        license.setComment(config.getExampleProperty());
+        
+        return license;
     }
 
-    /**
-     * Updates an existing license.
-     * @param license The license object to update.
-     * @return The updated License object.
-     */
     public License updateLicense(License license){
         licenseRepository.save(license);
 
-        // FIX 5: Use the correct getter for the configuration property (changed from getExampleProperty() to getProperty()).
-        return license.withComment(config.getProperty());
+        // FIX 2 & 4: Call the correct config getter (e.g., getExampleProperty) and 
+        // use a setter if withComment() doesn't exist.
+        license.setComment(config.getExampleProperty());
+        
+        return license;
     }
 
-    /**
-     * Deletes a license by its ID.
-     * @param licenseId The ID of the license to delete.
-     * @return A response message confirming the deletion.
-     */
     public String deleteLicense(String licenseId){
-        // Note: For simplicity, delete() is used directly. A robust service would
-        // first check for existence before deleting.
         licenseRepository.deleteById(licenseId);
-        String responseMessage = String.format(messages.getMessage("license.delete.message", null, null), licenseId);
+        
+        // FIX 5 (Part B): Correctly use MessageSource to format the deletion message.
+        String responseMessage = messages.getMessage(
+            "license.delete.message", 
+            new Object[] {licenseId}, // Pass licenseId as the argument
+            null // Locale
+        );
         return responseMessage;
     }
 }

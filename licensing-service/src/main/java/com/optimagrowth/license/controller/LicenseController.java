@@ -25,13 +25,6 @@ public class LicenseController {
     @Autowired
     private LicenseService licenseService;
 
-    /**
-     * Retrieves a specific license by organizationId and licenseId.
-     * HATEOAS links are added to the response for related actions.
-     * * @param organizationId The organization identifier from the URL path.
-     * @param licenseId The license identifier from the URL path.
-     * @return ResponseEntity containing the License object with HATEOAS links.
-     */
     @GetMapping(value="/{licenseId}")
     public ResponseEntity<License> getLicense(
             @PathVariable("organizationId") String organizationId,
@@ -39,14 +32,14 @@ public class LicenseController {
 
         License license = licenseService.getLicense(licenseId, organizationId);
         
-        // Add HATEOAS links to the License object
+        // FIX: Pass organizationId into methodOn for createLicense and updateLicense
         license.add( 
                 // Self link (GET)
                 linkTo(methodOn(LicenseController.class).getLicense(organizationId, license.getLicenseId())).withSelfRel(),
-                // Create link (POST)
-                linkTo(methodOn(LicenseController.class).createLicense(license)).withRel("createLicense"),
-                // Update link (PUT)
-                linkTo(methodOn(LicenseController.class).updateLicense(license)).withRel("updateLicense"),
+                // Create link (POST) - FIX: Pass organizationId
+                linkTo(methodOn(LicenseController.class).createLicense(organizationId, license)).withRel("createLicense"),
+                // Update link (PUT) - FIX: Pass organizationId
+                linkTo(methodOn(LicenseController.class).updateLicense(organizationId, license)).withRel("updateLicense"),
                 // Delete link (DELETE)
                 linkTo(methodOn(LicenseController.class).deleteLicense(organizationId, license.getLicenseId())).withRel("deleteLicense")
         );
@@ -56,32 +49,28 @@ public class LicenseController {
 
     /**
      * Updates an existing license via a PUT request.
-     * * @param request The License object to update from the request body.
-     * @return ResponseEntity containing the updated License object.
+     * FIX: Added @PathVariable("organizationId") to match the class-level @RequestMapping.
      */
     @PutMapping
-    public ResponseEntity<License> updateLicense(@RequestBody License request) {
+    public ResponseEntity<License> updateLicense(
+            // FIX: Added PathVariable
+            @PathVariable("organizationId") String organizationId, 
+            @RequestBody License request) {
         return ResponseEntity.ok(licenseService.updateLicense(request));
     }
     
     /**
      * Creates a new license via a POST request.
-     * * @param request The License object to create from the request body.
-     * @return ResponseEntity containing the created License object and HTTP status 201 (CREATED).
+     * FIX: Added @PathVariable("organizationId") to match the class-level @RequestMapping.
      */
     @PostMapping
-    public ResponseEntity<License> createLicense(@RequestBody License request) {
+    public ResponseEntity<License> createLicense(
+            // FIX: Added PathVariable
+            @PathVariable("organizationId") String organizationId, 
+            @RequestBody License request) {
         return new ResponseEntity<>(licenseService.createLicense(request), HttpStatus.CREATED);
     }
 
-    /**
-     * Deletes a license by its ID via a DELETE request.
-     * Note: OrganizationId is required in the path but not used in the service method here, 
-     * but we pass it into the method signature to make the HATEOAS link resolution correct.
-     * * @param organizationId The organization identifier from the URL path (for HATEOAS link).
-     * @param licenseId The license identifier from the URL path.
-     * @return ResponseEntity containing the deletion status message.
-     */
     @DeleteMapping(value="/{licenseId}")
     public ResponseEntity<String> deleteLicense(
             @PathVariable("organizationId") String organizationId,

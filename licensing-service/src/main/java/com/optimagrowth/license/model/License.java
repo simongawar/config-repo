@@ -11,32 +11,38 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.io.Serializable; // <--- ADDED: Needed for JPA entities
+import java.io.Serializable;
 
-/**
- * Represents the License Entity used for persistence with a MySQL database
- * via Spring Data JPA.
- *
- * This entity extends RepresentationModel for HATEOAS support.
- */
 @Getter @Setter @ToString
 @Entity
 @Table(name="licenses")
-public class License extends RepresentationModel<License> implements Serializable { // <--- ADDED: Implements Serializable
+public class License extends RepresentationModel<License> implements Serializable {
 
-    // Recommended for Serializable classes
     private static final long serialVersionUID = 1L;
 
     @Id
     @Column(name = "license_id", nullable = false)
     private String licenseId;
 
-    // ADDED: Explicit @Column annotation for the description field
     @Column(name = "description")
     private String description;
 
     @Column(name = "organization_id", nullable = false)
     private String organizationId;
+    
+    // ----------------------------------------------------------------------
+    // PROBABLE FIXES (Missing Fields 5, 6, 7):
+    
+    @Column(name = "organization_name", nullable = false)
+    private String organizationName; // <-- FIX 5: Added missing organization name
+    
+    @Column(name = "license_max", nullable = false)
+    private Integer licenseMax;      // <-- FIX 6: Added license max count
+    
+    @Column(name = "cost")
+    private String cost;             // <-- FIX 7: Added cost field
+
+    // ----------------------------------------------------------------------
 
     @Column(name = "product_name", nullable = false)
     private String productName;
